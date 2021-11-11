@@ -619,6 +619,247 @@ public static void main(String[] args) {
     }
 ```
 
+## 常用API
+
+### Math
+
+#### Math类概述
+
+Math包含执行基本数字运算的方法
+
+没有构造方法，如何使用类中的成员呢？
+
+看类的成员是否都是静态的，如果是，通过类名就可以直接调用
+
+#### Math类的常用方法
+
+| 方法名                                         | 说明                                                         |
+| ---------------------------------------------- | :----------------------------------------------------------- |
+| public static int abs(int a）                  | 返回参数的绝对值                                             |
+| public static double ceil(double a)            | 返回大于或等于参数的最小double值，等于一个整数    即**向上取整** |
+| public static double floor(double a）          | 返回小于或等于参数的最大double值，等于一个整数    即**向下去整** |
+| public static int round(float a)               | 按照四舍五入返回最接近参数的int                              |
+| public static int max(int a, int b)            | 返回两个int值中的较大值                                      |
+| public static int min(int a, int b)            | 返回两个int值中的较小值                                      |
+| public static double pow( double a, double b） | 返回a的b次的值                                               |
+| ublic static double random（）                 | 返回值为 在[0.0,1.0)区间 double的正值，即**随机在[0.0,1.0)区间取值** |
+
+### System
+
+#### System类概述
+
+System包含几个有用的类字段和方法，它不能被实例化
+
+###  System类的常用方法
+
+| 方法名                               | 说明                                       |
+| ------------------------------------ | ------------------------------------------ |
+| public static void exit (int status) | 终止当前运行的java虚拟机，非零表示异常终止 |
+| public static long currenTimeMilis() | 返回当前时间（以毫秒为单位）               |
+
+System.currenTimeMillis( ) 可用于计算一段代码运行所耗时间
+
+**范例**
+
+```java
+public static void main(String[] args) {
+//计算程序耗时
+long start = System.currentTimeMillis();
+for (int i = 0; i < 10000; i++) {
+    System.out.println(i);
+}
+long end = System.currentTimeMillis();
+System.out.println(end - start+"毫秒");
+}
+```
+
+### Object
+
+#### Object类的概述
+
+Object是类层次结构的根，每个类都可以将 Object作为超类。所有类都直接或者间接的继承自该类
+
+构造方法： public Object( )
+
+回想面向对象中，为什么说子类的构造方法默认访可的是父类的无参构方法名造方法？
+
+因为它们的顶级父类只有无参构造方法
+
+#### Object类的常用方法
+
+| 方法名                             | **说明**                                                   |
+| ---------------------------------- | ---------------------------------------------------------- |
+| public String tostring             | 返回对象的字符串表示形式。建议所有子类重写该方法，自动生成 |
+| public boolean equals( Object obj) | 比较对象是否相等。默认比较地址，重写可以比较内容，自动生成 |
+
+### Arrars
+
+#### Arrays类的概述和常用方法
+
+| 方法名                                   | 说明                               |
+| ---------------------------------------- | ---------------------------------- |
+| public static String tostring(int[ ] a） | 返回指定数组的字符串表示形式的内容 |
+| public static void sort(int [ ]a)        | 按照数字顺序排列指定的数组         |
+
+**范例**
+
+```java
+public static void main(String[] args) {
+
+    int[] arr = {5, 8, 4, 7, 9, 6, 2, 1, 1, 2};
+    // 输出 [5,8,4,7,9,6,2,1,1,2]  该结果为字符串
+    System.out.println(Arrays.toString(arr));
+}
+
+```
+
+**工具类的设计思想**
+
+构造方法用 private 修饰
+
+修饰成员用 public static 修饰
+
+
+
+
+
+#### 排序
+
+将一组数据按照固定的规则进行排列
+
+##### 快速排序
+
+首先是最简单的Array.sort，直接进行排序：
+
+```java
+public static void main(String[] args) {
+  int[] arr = {4,3,5,1,7,9,3};
+    
+  // 快速排序法 使用 Arrays 类中的 sort 方法 
+  // Arrays.sort( int [] )
+  Arrays.sort(arr);
+  for (int i : arr){  // for增强 同于for( int i =0 ; i<arr.length; i++ ; )
+   	System.out.println(i);
+  }
+```
+
+点击运行即可输出已排序的数组数字。
+
+##### 部分排序法
+
+使用Array.sort还可进行选择想要排序的部分数字，如将下角标编号为1~4的数字进行排序，其他数字顺序不变。
+
+```java
+public static void main(String[] args) {
+  
+  int[] arr = {4,3,5,1,2,9,3,0};
+  
+  Arrays.sort(arr,1,4);
+  
+  for (int i = 0;i<arr.length;i++){
+   System.out.print(arr[i]+",");
+  }
+ }
+```
+
+输出结果为：4,1,3,5,2,9,3,0,   可见仅下标为1~4的数字进行了排序。
+
+##### 冒泡排序
+
+冒泡排序：一种排序的方式，对要进行排序的数据中相的据进行两两比較，将较大的数据放在后面，依次对所有的数据进行操作，直至所有数据按要求完成排序
+
+```java
+ public static void main(String[] args) {
+ 
+  int[] arr = {5, 8, 4, 7, 9, 6, 2, 1, 1, 2};
+  
+  // 冒泡排序法 从下到上，两两进行比较，越小的越往上，从而形成由小到大的排序
+     
+        int cout = 0;
+     //外循环为排序趟数，len个数进行len-1趟
+        for (int i = 0; i < arr.length - 1; i++) {   
+            //内循环为每趟比较的次数，第i趟比较len-i次
+            for (int j = 0; j < arr.length - 1; j++) {
+               // 相邻元素比较，若逆序则交换（升序为左大于右，降序反之）
+                if (arr[j] > arr[j + 1]) { 
+                    cout = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = cout;
+                }
+            }
+        }
+        for (int i : arr ) {
+            System.out.print(arr[i] + ",");
+        }
+
+```
+
+### 基本类型包装类
+
+​		将基本数据类型封装成象的好处在于可以在对象中定义更多的功能方法操作该数据常用的操作之一：用于基本数据类型与字符串之间的转换
+
+| 基本数据类型 |  包装类   |
+| :----------: | :-------: |
+|     byte     |   Byte    |
+|    short     |   Short   |
+|     int      |  Integer  |
+|     long     |   Long    |
+|    float     |   Float   |
+|    double    |  Double   |
+|     char     | Character |
+|   boolean    |  Boolean  |
+
+####  Integer类的概述和使用
+
+Integer:包装一个对象中的原始类型int的值
+
+| 方法名                                  | 说明                                    |
+| --------------------------------------- | --------------------------------------- |
+| public Integer(int value)               | 根据int值创建 Integer对象（过时）       |
+| public Integer(String s)                | 根据 String值创建 Integer对象（过时）   |
+| public static Integer valueOf(int i)    | 返回表示指定的int值的 Integer实例       |
+| public static Integer valueOf(String s) | 返回一个保存指定值的 Integer对象 String |
+
+#### int和 String的相互转换
+
+基本类型包装类的最常见操作就是：用于基本类型和字符串之间的相互转换
+
+##### int转换为 String
+
+public static String valueOf(int i) 返回int参数的字符串表示形式。该方法是 String类中的方法
+
+**范例**
+
+```java
+// int 转换为string  String.valueOf(int z)
+int z = 100 ;
+String c = String.valueOf(z);
+System.out.println(c);
+//输出100 	100为String 类型
+```
+
+##### String转換为int
+
+public static int pareseInt( String s) 将字符串解析为int类型。该方法是 Integer类中的方法
+
+##### 范例
+
+```java
+// string 转换为 int  Integer.parseInt(String s )
+String s = "100" ;
+int x = Integer.parseInt(s);
+System.out.println(x);
+//输出为 100   100为Int 类型
+```
+
+
+
+
+
+
+
+
+
 
 
 
@@ -642,16 +883,19 @@ public static void main(String[] args) {
 ## IDea
 
 ```java
-ifn：可生成 if(xxx = null)
+ifn		可生成 if(xxx = null)
 类似的：
-inn ：可生成 if(xxx != null) 或 xxx. nn 或 xxx.null
+inn		可生成 if(xxx != null) 或 xxx. nn 或 xxx.null
 ```
 
 ```java
-prsf：可生成 private static final
-类似的：
-psf ：可生成 public static final
-psfi ：可生成 public static final int
-psfs ：可生成 public static final String
+prsf	可生成 private static final
+类似的:
+psf		可生成 public static final
+psfi	可生成 public static final int
+psfs	可生成 public static final String
 ```
 
+**查看方法的源码 选中方法 按下 Ctrl+B**
+
+**快速跳转高亮代码 Shift + F2**
