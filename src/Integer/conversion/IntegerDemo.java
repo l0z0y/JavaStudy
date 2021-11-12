@@ -1,4 +1,4 @@
-package Integer;
+package Integer.conversion;
 
 /**
  * @author li'zi'yao

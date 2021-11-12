@@ -1,4 +1,4 @@
-package stringsorting;
+package Integer.stringsorting;
 
 import java.util.Arrays;
 
