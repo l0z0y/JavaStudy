@@ -1,4 +1,4 @@
-package Integer.date.constructionmethod;
+package date.constructionmethod;
 
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package Integer.date.februaryday;
+package date.februaryday;
 
 import java.util.Calendar;
 import java.util.Scanner;

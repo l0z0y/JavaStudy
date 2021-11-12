@@ -1,4 +1,4 @@
-package Integer.date.commonmethod;
+package date.commonmethod;
 
 import java.util.Date;
 
