@@ -36,13 +36,13 @@ public class ArrayDemo {
          */
 
         // 冒泡排序法 从下到上，两两进行比较，越小的越往上，从而形成由小到大的排序
-        int cout;
+        int count;
         for (int i = 0; i < arr.length - 1; i++) {
             for (int j = 0; j < arr.length - 1; j++) {
                 if (arr[j] > arr[j + 1]) {
-                    cout = arr[j];
+                    count = arr[j];
                     arr[j] = arr[j + 1];
-                    arr[j + 1] = cout;
+                    arr[j + 1] = count;
 
                 }
             }
@@ -52,5 +52,12 @@ public class ArrayDemo {
             System.out.print(arr[i] + ",");
         }
 
+
+        System.out.println();
+
+        //二分查找 返回索引 int类型  位置= 索引+1
+        int z = Arrays.binarySearch(arr,8);
+        System.out.println(z+1);
     }
+
 }
