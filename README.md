@@ -3374,6 +3374,308 @@ class Banz extends Car {
 
 
 
+## 异常处理
+
+### 异常概述、体系
+
+#### **什么是异常？**
+
+异常是程序在“编译”或者“执行”的过程中可能出现的问题，**注意**：语法错误不算在异常体系中。 
+
+
+
+比如:数组索引越界、空指针异常、 日期格式化异常
+
+#### **为什么要学习异常**
+
+异常一旦出现了，如果没有提前处理，程序就会退出JVM虚拟机而终止.
+
+
+
+研究异常并且避免异常，然后提前处理异常，体现的是程序的安全, 健壮性。
+
+#### **异常体系**
+
+**Error**：
+
+系统级别问题、JVM退出等，代码无法控制。
+
+**Exception**：java.lang包下，称为异常类，它表示程序本身可以处理的问题
+
+**RuntimeException**及其子类：运行时异常，编译阶段不会报错。 (空指针异常，数组索引越界异常) 
+
+除**RuntimeException**之外所有的异常：编译时异常，编译期必须处理的，否则程序
+
+不能通过编译。 (日期格式化异常)
+
+#### **编译时异常和运行时异常**
+
+编译时异常就是在编译的时候出现的异常，
+
+运行时异常就是在运行时出现的异常。
+
+
+
+### 常见运行时异常
+
+#### **运行时异常示例**
+
+数组索引越界异常: ArrayIndexOutOfBoundsException
+
+空指针异常 : NullPointerException，直接输出没有问题，但是调用空指针的变量的功能就会报错。
+
+数学操作异常：ArithmeticException
+
+类型转换异常：ClassCastException
+
+数字转换异常： NumberFormatException
+
+
+
+### 常见编译时异常
+
+不是**RuntimeException**或者其子类的异常，编译阶就报错，必须处理，否则代码不通过
+
+**编译时异常：继承自Exception的异常或者其子类**
+
+**编译阶段报错，必须处理，否则代码不通过。**
+
+### 异常的默认处理流程
+
+①默认会在出现异常的代码那里自动的创建一个异常对象：**ArithmeticException**。
+
+②异常会从方法中出现的点这里抛出给调用者，调用者最终抛出给JVM虚拟机。
+
+③虚拟机接收到异常对象后，先在控制台直接输出异常栈信息数据。
+
+④直接从当前执行的异常点干掉当前程序。
+
+后续代码没有机会执行了，因为程序已经死亡
+
+
+
+### 编译时异常的处理机制
+
+出现异常直接抛出去给调用者，调用者也继续抛出去。
+
+出现异常自己捕获处理，不麻烦别人。
+
+前两者结合，出现异常直接抛出去给调用者，调用者捕获处理
+
+#### **异常处理方式1 —— throws**
+
+throws：用在方法上，可以将方法内部出现的异常抛出去给本方法的调用者处理。
+
+这种方式并不好，发生异常的方法自己不处理异常，如果异常最终抛出去给虚拟机将引起程序死亡。
+
+```java
+方法 throws Exception{
+ }
+```
+
+#### **异常处理方式2—— try…catch…**
+
+监视捕获异常，用在方法内部，可以将方法内部出现的异常直接捕获处理。
+
+这种方式还可以，发生异常的方法自己独立完成异常的处理，程序可以继续往下执行。
+
+```java
+try{   
+    // 可能出现异常的代码！
+	}catch (Exception e){
+    e.printStackTrace(); // 直接打印异常栈信息
+}
+Exception可以捕获处理一切异常类型！
+```
+
+#### **异常处理方式3 ——前两者结合**
+
+方法直接将异通过throws抛出去给调用者
+
+调用者收到异常后直接捕获处理。
+
+
+
+**在开发中按照规范来说第三种方式是最好的：底层的异常抛出去给最外层，最外层集中捕获处理。**
+
+**实际应用中，只要代码能够编译通过，并且功能能完成，那么每一种异常处理方式似乎也都是可以的。**
+
+
+
+### 运行时异常的处理机制
+
+运行时异常编译阶段不会出错，是运行时才可能出错的，所以编译阶段不处理也可以。
+
+按照规范建议还是处理：建议在最外层调用处集中捕获处理即可
+
+
+
+### 异常处理使代码更稳健的案例
+
+```java
+ public static void main(String[] args) {
+        Scanner sc  = new Scanner(System.in);
+        while (true) {
+            try {
+                System.out.println("请您输入合法的价格：");
+                String priceStr = sc.nextLine();
+                // 转换成double类型的价格
+                double price = Double.valueOf(priceStr);
+
+                // 判断价格是否大于 0
+                if(price > 0) {
+                    System.out.println("定价：" + price);
+                    break;
+                }else {
+                    System.out.println("价格必须是正数~~~");
+                }
+            } catch (Exception e) {
+                System.out.println("用户输入的数据有毛病，请您输入合法的数值，建议为正数~~");
+            }
+        }
+    }
+```
+
+当priceStr存入任何数据都能继续运行 直到输入正数
+
+如果没有try/catch 当priceStr存入字符便会出错
+
+## 日志框架
+
+### 日志技术的概述
+
+![image-20211117203633412](https://lllzzzyyy.oss-cn-shenzhen.aliyuncs.com/image-20211117203633412.png)
+
+#### **日志技术具备的优势**
+
+可以将系统执行的信息选择性的记录到指定的位置（控制台、文件中、数据库中）。
+
+可以随时以**开关**的形式控制是否记录日志，无需修改源代码。
+
+|          | **输出语句**               | **日志技术**                         |
+| -------- | :------------------------- | ------------------------------------ |
+| 输出位置 | 只能是控制台               | 可以将日志信息写入到文件或者数据库中 |
+| 取消日志 | 需要修改代码，灵活性比较差 | 不需要修改代码，灵活性比较好         |
+| 多线程   | 性能较差                   | 性能较好                             |
+
+### 日志技术体系
+
+**日志规范大多是一些接口，提供给实现框架去设计的。**
+
+**常见的规范是：**
+
+**Commons Logging**
+
+**Simple Logging Facade for Java**
+
+![image-20211117203943616](https://lllzzzyyy.oss-cn-shenzhen.aliyuncs.com/image-20211117203943616.png)
+
+
+
+**日志规范：**一些接口，提供给日志的实现框架设计的标准。
+
+**日志框架：**牛人或者第三方公司已经做好的日志记录实现代码，后来者直接可以拿去使用。
+
+因为对Commons Logging的接口不满意，有人就搞了SLF4J。因为对Log4j的性能不满意，有人就搞了Logback。
+
+### Logback概述
+
+**Logback日志框架**
+
+Logback是由log4j创始人设计的另一个开源日志组件，性能比log4j要好
+
+Logback是基于slf4j的日志规范实现的框架。
+
+**Logback主要分为三个技术模块**：
+
+ **logback-core**： logback-core 模块为其他两个模块奠定了基础，必须有。
+
+ **logback-classic**：它是log4j的一个改良版本，同时它完整实现了slf4j API。
+
+ **logback-access** 模块与 Tomcat 和 Jetty 等 Servlet 容器集成，以提供 HTTP 访问日志功能
+
+
+
+### Logback快速入门
+
+在项目下新建文件夹lib，导入Logback的相关jar包到该文件夹下，并添加到项目依赖库中去。
+
+将Logback的核心配置文件logback.xml直接拷贝到src目录下（必须是src下）。
+
+在代码中获取日志的对象
+
+public static final Logger *LOGGER* = LoggerFactory.*getLogger*("类对象");
+
+#### 范例
+
+```java
+public static Logger logger = LoggerFactory.getLogger("Demo.class");
+
+public static void main(String[] args) {
+    try {
+        logger.debug("开始了");
+        logger.info("ccc");
+        int a = 10;
+        int b = 0;
+        logger.trace("a" + a);
+        logger.trace("b" + b);
+        System.out.println(a / b);
+    } catch (Exception e) {
+        e.printStackTrace();
+        logger.error("异常"+e);
+    }
+
+}
+```
+
+### Logback配置详解-输出位置、格式设置
+
+Logback日志系统的特性都是通过核心配置文件logback.xml控制的。
+
+**Logback日志输出位置、格式设置：**
+
+通过logback.xml 中的< append >标签可以设置输出位置和日志信息的详细格式。
+
+通常可以设置2个日志输出位置：一个是控制台、一个是系统文件中
+
+**输出到控制台的配置标志**
+
+```java
+<appender name="CONSOLE"class="ch.qos.logback.core.ConsoleAppender">
+```
+
+**输出到系统文件的配置标志**
+
+```java
+<appender name="FILE"class="ch.qos.logback.core.rolling.RollingFileAppender">
+```
+
+### Logback配置详解-日志级别设置
+
+**日志级别**
+
+级别程度依次是：TRACE< DEBUG< INFO<WARN<ERROR ; 默认级别是debug（忽略大小写），对应其方法。
+
+作用：用于控制系统中哪些日志级别是可以输出的，只输出级别不低于设定级别的日志信息。
+
+ALL  和 OFF分别是打开全部日志信息，及关闭全部日志信息。
+
+**具体在< root level="INFO">标签的level属性中设置日志级别**
+
+```java
+<root level=“INFO">
+   <appender-ref ref="CONSOLE"/>
+   <appender-ref ref="FILE" />
+ </root>
+```
+
+
+
+
+
+
+
+
 
 
 
