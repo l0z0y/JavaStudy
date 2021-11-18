@@ -3669,6 +3669,357 @@ ALL  和 OFF分别是打开全部日志信息，及关闭全部日志信息。
  </root>
 ```
 
+## File、方法递归、IO流
+
+1.先要定位文件
+
+File类可以定位文件：进行删除、获取文本本身信息等操作**。**
+
+**但是不能读写文件内容。**
+
+2、读写文件数据
+
+IO流技术可以对硬盘中的文件进行读写
+
+3、今日总体学习思路
+
+**先学会使用File类定位文件以及操作文件本身**
+
+**然后学习IO流读写文件数据。**
+
+![image-20211118211907209](https://lllzzzyyy.oss-cn-shenzhen.aliyuncs.com/image-20211118211907209.png)
+
+## File
+
+### **File类概述**
+
+File类在包java.io.File下、代表操作系统的文件对象（文件、文件夹）。
+
+File类提供了诸如：定位文件，获取文件本身的信息、删除文件、创建文件（文件夹）等功能
+
+### File类创建对象
+
+| 方法名称                                      | 说明                                               |
+| --------------------------------------------- | -------------------------------------------------- |
+| **public** File(String  pathname)             | 根据文件路径创建文件对象                           |
+| **public** File(String  parent, String child) | 从父路径名字符串和子路径名字符串创建文件对象       |
+| **public** File(File parent, String child)    | 根据父路径对应文件对象和子路径名字符串创建文件对象 |
+
+File对象可以定位文件和文件夹
+
+File封装的对象仅仅是一个路径名，这个路径可以是存在的，也可以是不存在的。
+
+### **绝对路径和相对路径**
+
+#### 绝对路径：
+
+从盘符开始
+
+```java
+File file1 = new File(“D:\\theima\\a.txt”);
+```
+
+#### 相对路径：
+
+不带盘符，默认直接到当前工程下的目录寻找文件
+
+```java
+File file3 = new File(“模块名\\a.txt”);
+```
+
+File类的作用？
+
+**创建对象定位文件，可以删除、获取文件信息等。但是不能读写文件内容。**
+
+2、File类构建对象的方式 ？
+
+**File file = new File(“文件/文件/绝对路径/相对路径”);**
+
+3、绝对路径和相对路径是什么样的？
+
+**绝对路径是带盘符的，依赖当前系统。**
+
+**相对路径是不带盘符的，默认相对到工程下开始寻找文件。**
+
+
+
+### File类的常用API
+
+#### 判断文件类型、获取文件信息
+
+| 方法名称                         | 说明                                       |
+| -------------------------------- | ------------------------------------------ |
+| public  boolean isDirectory()    | 测试此抽象路径名表示的File是否为文件夹     |
+| public  boolean isFile()         | 测试此抽象路径名表示的File是否为文件       |
+| public  boolean  exists()        | 测试此抽象路径名表示的File是否存在         |
+| public  String getAbsolutePath() | 返回此抽象路径名的绝对路径名字符串         |
+| public  String getPath()         | 将此抽象路径名转换为路径名字符串           |
+| public  String getName()         | 返回由此抽象路径名表示的文件或文件夹的名称 |
+| public  long lastModified()      | 返回文件最后修改的时间毫秒值               |
+
+##### 范例
+
+```java
+public static void main(String[] args) {
+        File file = new File("C:\\code\\data.log");
+
+        // file.isDirectory() 测试此抽象路径名表示的File是否为文件夹 返回boolean
+        System.out.println(file.isDirectory());
+        //file.isFile()  测试此抽象路径名表示的File是否为文件  返回boolean
+        System.out.println(file.isFile());
+        //file.exists()  测试此抽象路径名表示的File是否存在 返回boolean
+        System.out.println(file.exists());
+        // file.getAbsoluteFile() 返回此抽象路径名的绝对路径名字符串
+        System.out.println(file.getAbsoluteFile());
+        //  file.getPath() 将此抽象路径名转换为路径名字符串
+        System.out.println(file.getPath());
+        //file.getName() 返回由此抽象路径名表示的文件或文件夹的名称
+        System.out.println(file.getName());
+        //file.lastModified() 返回文件最后修改的时间毫秒值
+        System.out.println(file.lastModified());
+        Date data = new Date(file.lastModified());
+        SimpleDateFormat simpledataformat = new
+        SimpleDateFormat("YY年MM月dd日 HH:mm:ss");
+        System.out.println("最后一次修改的时间是：" + simpledataformat.format(data));
+
+
+    }
+```
+
+##### 输出
+
+```java
+false
+true
+true
+C:\code\data.log
+C:\code\data.log
+data.log
+1637155753944
+最后一次修改的时间是：21年11月17日 21:29:13
+
+```
+
+
+
+#### 创建文件、删除文件功能
+
+| 方法名称                       | 说明                 |
+| ------------------------------ | -------------------- |
+| public boolean createNewFile() | 创建一个新的空的文件 |
+| public boolean mkdir()         | 只能创建一级文件夹   |
+| public boolean mkdirs()        | 可以创建多级文件夹   |
+
+| 方法名称                 | 说明                                   |
+| ------------------------ | -------------------------------------- |
+| public  boolean delete() | 删除由此抽象路径名表示的文件或空文件夹 |
+
+delete方法默认只能删除文件和空文件夹。
+
+delete方法直接删除不走回收站
+
+##### 范例
+
+```java
+   public static void main(String[] args) {
+
+// file1.mkdir() 创建单级文件夹
+    File file1 = new File("C:\\code\\log");
+    System.out.println("单级文件夹创建：" + file1.mkdir());
+
+    //file2.createNewFile() 创建一个新的空的文件
+    File file2 = new File("C:\\code\\log.txt");
+    try {
+        System.out.println(file2.createNewFile());
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    // 创建多级文件夹
+    File file3 = new File("C:\\code\\log1\\zz");
+    System.out.println("多级文件夹创建：" + file3.mkdirs());
+
+    //删除由此抽象路径名表示的文件或空文件夹   默认只能删除文件和空文件夹
+    System.out.println("删除"+file1.delete());
+    System.out.println("删除"+file2.delete());
+    System.out.println("删除"+file3.delete());
+
+}
+```
+
+
+
+### 遍历文件夹
+
+#### File类的遍历功能
+
+| 方法名称                        | 说明                                                         |
+| ------------------------------- | ------------------------------------------------------------ |
+| public String[] list()          | 获取当前目录下所有的"一级文件名称"到一个字符串数组中去返回。 |
+| public File[] listFiles()(常用) | 获取当前目录下所有的"一级文件对象"到一个文件**对象数组**中去返回（重点） |
+
+**只能遍历当前文件夹对象下的一级文件对象。**
+
+##### **listFiles方法注意事项：**
+
+当调用者**不存在**时，返回null
+
+当调用者是一个**文件**时，返回null
+
+当调用者是一个**空文件夹**时，返回一个**长度为0**的数组
+
+当调用者是一个有**内容的文件夹**时，将里面所有文件和文件夹的路径放在File数组中返回
+
+当调用者是一个有**隐藏文件的文件夹**时，将里面所有文件和文件夹的路径放在File**数组**中返回，包含隐藏内容
+
+当调用者是一个**需要权限才能进入的文件夹**时，返回null
+
+#### File类相关的API的练习题
+
+需求1：统计一个文件夹中每种文件的个数并打印。
+
+①打印格式如下：
+
+② txt:3个
+
+③ doc:4个
+
+④ jpg:6个
+
+需求2：将某个文件夹下的一级文件对象，按照最近修改时间降序展示，并显示修改时间。
+
+①打印格式如下：
+
+② aaa.txt: 2021-03-22 10:23:23
+
+③ dlei.doc: 2021-03-21 8:23:23
+
+④ meinv.jpg:6个 2008-11-11 11:11:11
+
+```java
+public static void main(String[] args) {
+        File file = new File("C:\\code");
+        File[] s = file.listFiles();
+        Date a = new Date();
+        SimpleDateFormat simpledataformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Arrays.sort(s, new Comparator<File>() {
+            @Override
+            public int compare(File o1, File o2) {
+                return o2.lastModified() - o1.lastModified() >= 0 ? 1 : -1;
+            }
+        });
+        for (int i = 0; i < s.length; i++) {
+            System.out.println(s[i] +"\t\t\t\t"+simpledataformat.format(s[i].lastModified()));
+
+        }
+
+        Map<String, Integer> map = new HashMap<>();
+        for (File file1 : s) {
+            if (file1.isFile()) {
+                String name = file1.getName();
+                String[] split = name.split("\\w+\\.");
+                if (map.containsKey(split[1])) {
+                    Integer count = map.get(split[1]);
+                    count = count + 1;
+                    map.put(split[1], count);
+                } else {
+                    map.put(split[1], 1);
+                }
+            }
+        }
+        System.out.println(map);
+
+
+    }
+```
+
+
+
+## 方法递归
+
+### 递归概述
+
+#### 什么是方法递归?
+
+方法直接调用自己或者间接调用自己的形式称为方法递归（ recursion）。
+
+递归做为一种[算法](https://baike.baidu.com/item/算法)在[程序设计语言](https://baike.baidu.com/item/程序设计语言)中广泛应用。
+
+#### **递归的形式**
+
+直接递归：方法自己调用自己。
+
+间接递归：方法调用其他方法，其他方法又回调方法自己。
+
+**方法递归存在的问题？**
+
+递归如果没有控制好终止，会出现递归死循环，导致栈内存溢出现象
+
+
+
+### 递归的算法流程、核心要素
+
+**递归解决问题的思路：**
+
+把一个复杂的问题层层转化为一个**与原问题相似的规模较小**的问题来求解。
+
+**递归算法三要素大体可以总结为：**
+
+**递归的公式：** **f(n) = f(n-1) \* n;**
+
+**递归的终结点：f(1)** 
+
+**递归的方向必须走向终结点：**
+
+```java
+public class DiGuiDemo01 {
+   public static void main(String[] args) {
+     int result = f(5);
+     System.out.println("5的阶乘是："+ result);
+   }
+   public static int f(int n) {
+    if(n == 1) {
+       return 1;
+     } else {
+       return n*f(n - 1);
+     }
+   }
+ }
+```
+
+
+
+
+
+
+
+## 缓冲流
+
+### 缓冲流概述
+
+缓冲流也称为高效流、或者高级流。之前的字节流可以称为原始流
+
+**作用：缓冲流自带缓冲区、可以提高原始字节流、字符流读写数据的性能**
+
+![image-20211118212048505](https://lllzzzyyy.oss-cn-shenzhen.aliyuncs.com/image-20211118212048505.png)
+
+![image-20211118212243175](https://lllzzzyyy.oss-cn-shenzhen.aliyuncs.com/image-20211118212243175.png)
+
+### 字节缓冲流
+
+字节缓冲输入流： Bufferedinputstream 提高字节输入流读取数据的性能，读写功能上并无变化
+
+字节缓冲输出流： Bufferedoutputstream 提高字节输出流读取数据的性能，读写功能上并无变化。
+
+#### 字节缓冲流性能优化原理
+
+字节缓冲输入流自带了8KB缓冲池，以后我们直接从缓冲池读取数据，所以性能较好。
+字节缓冲输出流自带了8KB缓冲池，数据就直接写入到缓冲池中去，写数据性能极高了。
+
+| 构造器                                       | 说明                                                         |
+| -------------------------------------------- | ------------------------------------------------------------ |
+| public Bufferedinputstream(Inputstream is）  | 可以把低级的字节输入流包装成一个高级的缓冲字节输入流管道，从而提高字节输入流读数据的性能 |
+| public Bufferedoutputstream(Outputstream os) | 可以把低级的字节输出流包装成一个高级的缓冲字节输出流，从而提高写数据的性能 |
 
 
 
@@ -3680,6 +4031,11 @@ ALL  和 OFF分别是打开全部日志信息，及关闭全部日志信息。
 
 
 
+### 字符缓冲流
+
+字符缓冲输入流： Buffered Reader
+
+字符缓冲輸出流： Bufferedwriter
 
 
 
