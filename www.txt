@@ -1,0 +1,7 @@
+2021-11-17 21:29:13.927 [main] DEBUG Demo.class - 开始了
+2021-11-17 21:29:13.934 [main] INFO  Demo.class - ccc
+2021-11-17 21:29:13.940 [main] TRACE Demo.class - a10
+2021-11-17 21:29:13.941 [main] TRACE Demo.class - b0
+2021-11-17 21:29:13.944 [main] ERROR Demo.class - 异常java.lang.ArithmeticException: / by zero
+我是lzya	
+aab
